@@ -27,32 +27,32 @@ var Chart = function (_React$Component) {
         height: 280
       };
 
-      var maxXValue = dots.map(function (coordinat) {
+      var maxYValue = dots.map(function (coordinat) {
         return +coordinat.split(',')[1];
       }).sort(function (a, b) {
         if (a > b) return 1;
         if (a < b) return -1;
       })[dots.length - 1];
 
-      var maxYValue = dots.map(function (coordinat) {
+      var maxXValue = dots.map(function (coordinat) {
         return +coordinat.split(',')[0];
       }).sort(function (a, b) {
         if (a > b) return 1;
         if (a < b) return -1;
       })[dots.length - 1];
 
-      var heightProportion = viewBox.height / maxXValue;
-      var widthProportion = viewBox.width / maxYValue;
+      var heightProportion = viewBox.height / maxYValue;
+      var widthProportion = viewBox.width / maxXValue;
 
       var editedDots = dots.map(function (item) {
         var x = +item.split(',')[0];
         var y = +item.split(',')[1];
 
-        return x * heightProportion + "," + y * widthProportion;
+        return x * widthProportion + "," + y * heightProportion;
       });
 
       // шаг 20,
-      var axelPointsCount = maxYValue / 100; // кол во точек
+      var axelPointsCount = maxYValue / 30; // кол во точек
       var heightBetweenDots = Math.round(viewBox.height / axelPointsCount); // высота одной точки
       var axelPoints = [];
       for (var i = 0; i < axelPointsCount; i++) {
@@ -63,11 +63,9 @@ var Chart = function (_React$Component) {
         return React.createElement(
           "g",
           { className: "axel x-axel", key: key },
-          React.createElement("line", { x1: "100", x2: viewBox.width, y1: item, y2: item })
+          React.createElement("line", { x1: "0", x2: viewBox.width, y1: item, y2: item })
         );
       });
-
-      console.log(axelsX);
 
       return React.createElement(
         "div",
@@ -83,7 +81,12 @@ var Chart = function (_React$Component) {
           React.createElement(
             "g",
             { className: "axel y-axel" },
-            React.createElement("line", { x1: "100", x2: "100", y1: "0", y2: viewBox.height })
+            React.createElement("line", { x1: "0", x2: "0", y1: "0", y2: viewBox.height })
+          ),
+          React.createElement(
+            "g",
+            { className: "axel y-axel" },
+            React.createElement("line", { x1: "0", x2: viewBox.width, y1: viewBox.height, y2: viewBox.height })
           ),
           axelsX,
           React.createElement(
@@ -122,7 +125,7 @@ var Chart = function (_React$Component) {
           ),
           React.createElement(
             "g",
-            { className: "labels y-labels" },
+            { transform: "translate(-100, 0)", className: "labels y-labels" },
             React.createElement(
               "text",
               { x: "80", y: "15" },
@@ -151,11 +154,11 @@ var Chart = function (_React$Component) {
           ),
           React.createElement(
             "g",
-            { transform: "translate(100, 0)" },
+            { className: "stroke-container" },
             React.createElement("polyline", {
+              className: "stroke",
               fill: "none",
-              stroke: "#0074d9",
-              "stroke-width": "3",
+              strokeWidth: "3",
               points: editedDots.join(' ') })
           )
         )
