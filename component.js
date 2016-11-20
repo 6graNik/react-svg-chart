@@ -47,7 +47,6 @@ class Chart extends React.Component {
   handleChartClick(e) {
     const obj = e;
     const {offsetX, offsetY} = e.nativeEvent;
-    console.log(">>>> ", offsetX, offsetY);
 
     const valueX = Math.round(offsetX / widthProportion);
     const valueY = Math.round((viewBox.height - offsetY) / heightProportion);
@@ -89,14 +88,14 @@ class Chart extends React.Component {
     }
 
 
-    const axelsX = axelPoints.map( (item, key) =>
-      <g className="axel x-axel" key={key}>
-        <line x1="0" x2={viewBox.width} y1={item} y2={item}></line>
-      </g>
-    );
+    const axelsX = axelPoints.map( (item, key) => {
+      return key !== 0 ? (<g className="axel x-axel" key={key}>
+              <line x1="0" x2={viewBox.width} y1={item} y2={item}></line>
+            </g>) : '';
+    });
 
     const labelsY = axelPoints.map((item, key) =>
-      <text x="0" y={item}>{Math.round(item / heightProportion)}</text>
+      <text key={key} x="0" y={item}>{Math.round(item / heightProportion)}</text>
     );
 
 
@@ -108,6 +107,9 @@ class Chart extends React.Component {
         <svg viewBox={`0 0 ${viewBox.width} ${viewBox.height}`} className="chart">
           <g className="axel y-axel">
             <line x1="0" x2="0" y1="0" y2={viewBox.height}></line>
+          </g>
+          <g className="axel x-axel">
+            <line x1="0" x2={viewBox.width} y1={viewBox.height} y2={viewBox.height}></line>
           </g>
           {axelsX}
           <g className="label y-label">
@@ -154,9 +156,10 @@ function ChartPopup(props) {
 
 function ChartDot(props) {
   const {top, left} = props;
+  const itemOffset = {top: 11, left: 6};
 
   return(
-    <span className="chartDot" style={{top: top + 11 + 'px', left: left + 'px'}}></span>
+    <span className="chartDot" style={{top: top + itemOffset.top + 'px', left: left - itemOffset.left + 'px'}}></span>
   );
 
 }

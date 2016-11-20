@@ -55,7 +55,6 @@ var Chart = function (_React$Component) {
           offsetX = _e$nativeEvent.offsetX,
           offsetY = _e$nativeEvent.offsetY;
 
-      console.log(">>>> ", offsetX, offsetY);
 
       var valueX = Math.round(offsetX / widthProportion);
       var valueY = Math.round((viewBox.height - offsetY) / heightProportion);
@@ -101,17 +100,17 @@ var Chart = function (_React$Component) {
       }
 
       var axelsX = axelPoints.map(function (item, key) {
-        return React.createElement(
+        return key !== 0 ? React.createElement(
           "g",
           { className: "axel x-axel", key: key },
           React.createElement("line", { x1: "0", x2: viewBox.width, y1: item, y2: item })
-        );
+        ) : '';
       });
 
       var labelsY = axelPoints.map(function (item, key) {
         return React.createElement(
           "text",
-          { x: "0", y: item },
+          { key: key, x: "0", y: item },
           Math.round(item / heightProportion)
         );
       });
@@ -133,6 +132,11 @@ var Chart = function (_React$Component) {
             "g",
             { className: "axel y-axel" },
             React.createElement("line", { x1: "0", x2: "0", y1: "0", y2: viewBox.height })
+          ),
+          React.createElement(
+            "g",
+            { className: "axel x-axel" },
+            React.createElement("line", { x1: "0", x2: viewBox.width, y1: viewBox.height, y2: viewBox.height })
           ),
           axelsX,
           React.createElement(
@@ -221,8 +225,9 @@ function ChartDot(props) {
   var top = props.top,
       left = props.left;
 
+  var itemOffset = { top: 11, left: 6 };
 
-  return React.createElement("span", { className: "chartDot", style: { top: top + 11 + 'px', left: left + 'px' } });
+  return React.createElement("span", { className: "chartDot", style: { top: top + itemOffset.top + 'px', left: left - itemOffset.left + 'px' } });
 }
 
 ReactDOM.render(React.createElement(Chart, null), document.getElementById('root'));
